@@ -1,60 +1,30 @@
-//const express = require('express');
-
-//const router = express.Router();
-
-//const BlogPost = require('../models/blogPost');
-
-
-//router.get('/', (req, res) => {
-
-//    BlogPost.find({})
-//        .then((data) => {
-//            console.log('Data: ', data);
-//            res.json(data);
-//        })
-//        .catch((error) => {
-//            console.log('error: ', error);
-//        });
-//});
-
-
-
-//router.post('/save', (req, res) => {
-//    const data = req.body;
-
-//    const newBlogPost = new BlogPost(data);
-
-//    newBlogPost.save((error) => {
-//        if (error) {
-//            res.status(500).json({ msg: 'Sorry, internal server errors' });
-//            return;
-//        }
-
-//        return res.json({
-//            msg: 'Your data has been saved!!!!!!'
-//        });
-//    });
-//});
-//router.delete('/save/:id', (req, res) => {
-//    newBlogPost.findOneAndDelete({ _id: req.params.id })
-//        .then(() => {
-//            res.json({ status: 'Task Deleted!' })
-//        })
-//        .catch(err => {
-//            res.send('error: ' + err)
-//        })
-//})
-
-
-
-
-
-//module.exports = router;
-
-
 const express = require('express');
 const app = express();
 const BlogPost = require('../models/blogPost');
+const crypto = require('crypto');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+
+// Create storage engine
+const storage = new GridFsStorage({
+    url: 'mongodb://localhost/nodedb',
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {
+            crypto.randomBytes(16, (err, buf) => {
+                if (err) {
+                    return reject(err);
+                }
+                const filename = buf.toString('hex') + path.extname(file.originalname);
+                const fileInfo = {
+                    filename: filename,
+                    bucketName: 'uploads'
+                };
+                resolve(fileInfo);
+            });
+        });
+    }
+});
+const upload = multer({ storage });
 
 app.get('/tasks', (req, res) => {
     BlogPost.find()
@@ -66,24 +36,43 @@ app.get('/tasks', (req, res) => {
         })
 })
 
-
-
 app.post('/task', (req, res) => {
-    if (!req.body.task_name) {
-        res.status(400)
-        res.json({
-            error: 'Bad Data'
-        })
-    } else {
-        BlogPost.create(req.body)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(err => {
-                res.json('error: ' + err)
-            })
-    }
-})
+    const lastName = req.body.lastName;
+    const aim = req.body.aim;
+    const body = req.body.body;
+    const firstName = req.body.firstName;
+    const image = req.body.file;
+
+    const newExercise = new BlogPost({
+        lastName,
+        aim,
+        body,
+        firstName,
+        image
+    });
+
+    newExercise.save()
+        .then(() => res.json('Exercise added!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
+//app.post('/task', (req, res) => {
+//    if (!req.body.firstName) {
+//        res.status(400)
+//        res.json({
+//            error: 'Bad Data'
+//        })
+//    } else {
+//        BlogPost.create(req.body)
+//            .then(data => {
+//                res.send(data)
+//            })
+//            .catch(err => {
+//                res.json('error: ' + err)
+//            })
+//    }
+//})
 
 app.delete('/task/:id', (req, res) => {
     BlogPost.findOneAndDelete({ _id: req.params.id })
@@ -96,7 +85,7 @@ app.delete('/task/:id', (req, res) => {
 })
 
 app.put('/task/:id', (req, res) => {
-    if (!req.body.task_name) {
+    if (!req.body.firstName) {
         res.status(400)
         res.json({
             error: 'Bad Data'
@@ -105,12 +94,12 @@ app.put('/task/:id', (req, res) => {
         BlogPost.findOneAndUpdate(
             { _id: req.params.id },
             {
-                title: req.body.title,
-                task_name: req.body.task_name,
-                author: req.body.author,
+                lastName: req.body.lastName,
+                firstName: req.body.firstName,
+                aim: req.body.aim,
                 body: req.body.body
             }
-         
+
 
         )
             .then(() => {
