@@ -1,21 +1,22 @@
 
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Card, Button, Icon, Input, TextArea } from 'semantic-ui-react'
-
+import { Card, Button, Icon, Image, Input, TextArea } from 'semantic-ui-react'
+import '../App.css'
 
 class Self extends Component {
     constructor(props) {
 
         super(props);
         this.state = {
-            title: '',
-            author: '',
+            lastName: '',
+            aim: '',
             body: '',
-            task_name: '',
+            firstName: '',
             items: [],
             editData: '',
-            id: ''
+            id: '',
+            file: ''
 
 
         }
@@ -53,10 +54,11 @@ class Self extends Component {
     submit = (e) => {
         e.preventDefault();
         const payload = {
-            title: this.state.title,
-            task_name: this.state.task_name,
-            author: this.state.author,
+            lastName: this.state.lastName,
+            firstName: this.state.firstName,
+            aim: this.state.aim,
             body: this.state.body,
+            productImage: this.state.file
 
 
         };
@@ -79,10 +81,11 @@ class Self extends Component {
 
     resetUserInputs = () => {
         this.setState({
-            title: '',
-            task_name: '',
-            author: '',
-            body: ''
+            lastName: '',
+            firstName: '',
+            aim: '',
+            body: '',
+            file: ''
         });
     };
 
@@ -96,9 +99,9 @@ class Self extends Component {
                 console.log(error)
             })
     }
-    onUpdate = (id, task_name, title, author, body, e) => {
+    onUpdate = (id, firstName, lastName, aim, body, e) => {
         e.preventDefault()
-        const updatedValue = { task_name: task_name, title: title, author: author, body: body }
+        const updatedValue = { firstName: firstName, lastName: lastName, aim: aim, body: body }
         axios.put(`api/task/${id}`, updatedValue)
             .then((res) => {
                 console.log(res.data)
@@ -111,13 +114,13 @@ class Self extends Component {
 
     }
 
-    onEdit = (task_name, id, title, author, body, e) => {
+    onEdit = (firstName, id, lastName, aim, body, e) => {
         e.preventDefault()
         this.setState({
             id: id,
-            task_name: task_name,
-            title: title,
-            author: author,
+            firstName: firstName,
+            lastName: lastName,
+            aim: aim,
             body: body
 
 
@@ -132,18 +135,34 @@ class Self extends Component {
 
 
         return items.map((post, index) => (
-            <Card style={{ padding: '10px', borderRight: '5px solid red' }} key={index} className="blog-post__display">
-                <div>
-                    <Icon
-                        onClick={this.onDelete.bind(this, post._id)} style={{ float: 'left', color: 'red' }} className="ui delete icon" />
-                    <Icon
-                        onClick={this.onEdit.bind(this, post.task_name, post._id, post.title, post.author, post.body
-                        )} style={{ float: 'right', color: 'green' }} className="ui edit icon" />
 
-                    <p style={{ float: 'center' }}>{`${post.task_name}____${post.title}`}</p>
-                    <p >{post.author}</p>
-                    <p >{post.body}</p>
-                </div>
+            <Card style={{ width: '30%', height: '30vh', margin: '10px', float: 'left', boxShadow: '2px 3px 8px 1px black', backgroundColor: '#E6E6FA' }} key={index} >
+
+                <Card.Content>
+                    <Image
+                        floated='right'
+                        size='mini'
+                        src={post.productImage}
+                    />
+                    <p>{post.firstName}  {post.lastName}</p>
+
+                    <Card.Meta>{post.aim}</Card.Meta>
+
+                    <Card.Description>
+                        {post.body}
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Button onClick={this.onEdit.bind(this, post.firstName, post._id, post.lastName, post.aim, post.body
+                        )} basic color='green'>
+                            Edit
+          </Button>
+                        <Button onClick={this.onDelete.bind(this, post._id)} basic color='red'>
+                            Delete
+          </Button>
+                    </div>
+                </Card.Content>
             </Card>
         ));
     };
@@ -155,63 +174,69 @@ class Self extends Component {
         const data = this.state
         return (
 
-            <div>
-
-                <form onSubmit={this.submit}>
-
-                    <div className="form-input">
-                        <Input
-                            type='text'
-                            name='task_name'
+            <div className='self'>
+                <form class="ui form app">
+                    <div class="field">
+                        <label>First Name</label>
+                        <input type="text" name='firstName'
                             placeholder='Enter task name'
-                            value={this.state.task_name}
+                            value={this.state.firstName}
                             onChange={this.handleChange}
                         />
-
                     </div>
-                    <div className="form-input">
-                        <Input
-                            type='text'
-                            name='title'
-                            placeholder='Enter title name'
-                            value={this.state.title}
+                    <div class="field">
+                        <label>Last Name</label>
+                        <input type="text" name='lastName'
+                            placeholder='Enter last name'
+                            value={this.state.lastName}
                             onChange={this.handleChange}
                         />
-
                     </div>
-                    <div className="form-input">
-                        <Input
-                            type='text'
-                            name='author'
-                            placeholder='Enter Author name'
-                            value={this.state.author}
+                    <div class="field">
+                        <label>Aim</label>
+                        <input type="text" name='aim'
+                            placeholder='Enter your aim'
+                            value={this.state.aim}
                             onChange={this.handleChange}
-                        />
 
+                        />
                     </div>
-                    <div className="form-input">
-                        <Input
-                            type='text'
-                            name='body'
+                    <div class="field">
+                        <label>Body</label>
+                        <input type="text" name='body'
                             placeholder='Enter body details'
                             value={this.state.body}
                             onChange={this.handleChange}
+
                         />
-
                     </div>
-                    <br />
+                    { //<div class="field">
+                        //    <label>File</label>
+                        //    <input type="file" name='file'
+                        //        onChange={this.handleChange}
 
-                    <Button
-                        onClick={this.onUpdate.bind(this, data.id, data.task_name, data.title, data.author, data.body)}
-                    >
-                        Update
+
+
+
+                        //    />
+                        //</div>
+                    }
+                    <div className='subBtn'>
+                        <Button className='orange'
+                            onClick={this.onUpdate.bind(this, data.id, data.firstName, data.lastName, data.aim, data.body)}
+                        >
+                            Update
                 </Button>
-                    <Button onClick={this.submit}>Submit</Button>
+                        <Button className='green' onClick={this.submit}>Submit</Button>
+                    </div>
                 </form>
 
-                <div className="blog-">
+
+                <div className='cardDetail'>
                     {this.displayBlogPost(this.state.items)}
                 </div>
+
+
             </div>
         )
     }

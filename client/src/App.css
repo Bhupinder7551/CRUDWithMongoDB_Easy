@@ -1,41 +1,33 @@
+.body{
+ 
+}
 .app {
-  padding: 10px;
+    padding-left: 15%;
+    padding-right: 15%;
+   
 }
 
-
-form {
-  width: 50%;
+.mainheader {
+    padding: 30px;
+    box-shadow: 10px 3px 25px 1px black;
 }
 
-.form-input {
-  margin: 10px 0px;
+.self {
+    margin-top: 40px
 }
 
-.form-input input, .form-input textarea {
-  width: 100%;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: .25rem;
-  border: 1px solid lightgray;
-  /*padding: .375rem .75rem;*/
-  outline: none;
-  
+.subBtn {
+    float: right
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: .25rem;
-  cursor: pointer;
-  outline: none;
+.cardDetail {
+    margin-top: 70px;
 }
 
-.blog-post__display {
-  border: 1px solid lightgrey;
-  margin: 5px 0px;
-  border-radius: 4px;
-  padding: 10px;
+.cardInfo {
+    padding: 20px;
+}
+
+.cardDiv {
+    padding: 20px;
 }
