@@ -37,17 +37,19 @@ app.get('/tasks', (req, res) => {
 })
 
 app.post('/task', (req, res) => {
-    const lastName = req.body.lastName;
-    const aim = req.body.aim;
-    const body = req.body.body;
-    const firstName = req.body.firstName;
-    const image = req.body.file;
+    const name = req.body.name;
+    const email = req.body.email;
+    const address = req.body.address;
+    const role = req.body.role;
+    const team = req.body.team;
+    const image = req.body.image;
 
     const newExercise = new BlogPost({
-        lastName,
-        aim,
-        body,
-        firstName,
+        name,
+        email,
+        address,
+        role,
+        team,
         image
     });
 
@@ -85,7 +87,7 @@ app.delete('/task/:id', (req, res) => {
 })
 
 app.put('/task/:id', (req, res) => {
-    if (!req.body.firstName) {
+    if (!req.body.name) {
         res.status(400)
         res.json({
             error: 'Bad Data'
@@ -94,10 +96,12 @@ app.put('/task/:id', (req, res) => {
         BlogPost.findOneAndUpdate(
             { _id: req.params.id },
             {
-                lastName: req.body.lastName,
-                firstName: req.body.firstName,
-                aim: req.body.aim,
-                body: req.body.body
+                name: req.body.name,
+                email: req.body.email,
+                address: req.body.address,
+                role: req.body.role,
+                team: req.body.team,
+                image: req.body.image
             }
 
 

@@ -3,9 +3,8 @@
     "",
     "\\client",
     "\\client\\src",
-    "\\client\\src\\Component",
-    "\\models",
-    "\\routes"
+    "\\client\\src\\Component"
   ],
+  "SelectedNode": "\\client\\src\\Component\\SelfPractice.js",
   "PreviewInSolutionExplorer": false
 }

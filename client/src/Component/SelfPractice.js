@@ -9,10 +9,12 @@ class Self extends Component {
 
         super(props);
         this.state = {
-            lastName: '',
-            aim: '',
-            body: '',
-            firstName: '',
+            name: '',
+            email: '',
+            address: '',
+            role: '',
+            team: '',
+            image: '',
             items: [],
             editData: '',
             id: '',
@@ -22,7 +24,7 @@ class Self extends Component {
         }
     }
     componentDidMount() {
-        this.getAll()
+        this.getAll();
     }
 
 
@@ -35,7 +37,6 @@ class Self extends Component {
             .then((response) => {
                 const data = response.data;
                 this.setState({ items: data });
-
             })
             .catch(() => {
                 alert('Error retrieving data!!!');
@@ -54,11 +55,12 @@ class Self extends Component {
     submit = (e) => {
         e.preventDefault();
         const payload = {
-            lastName: this.state.lastName,
-            firstName: this.state.firstName,
-            aim: this.state.aim,
-            body: this.state.body,
-            productImage: this.state.file
+            name: this.state.name,
+            email: this.state.email,
+            address: this.state.address,
+            role: this.state.role,
+            team: this.state.team,
+            image: this.state.image
 
 
         };
@@ -71,6 +73,8 @@ class Self extends Component {
                 console.log('data has been sent to the server');
                 this.resetUserInputs();
                 this.getAll();
+
+                console.log("successfullyrrrrr get the data");
             })
             .catch(() => {
                 console.log('Internal server error')
@@ -81,11 +85,12 @@ class Self extends Component {
 
     resetUserInputs = () => {
         this.setState({
-            lastName: '',
-            firstName: '',
-            aim: '',
-            body: '',
-            file: ''
+            name: '',
+            email: '',
+            address: '',
+            role: '',
+            team: '',
+            image: ''
         });
     };
 
@@ -93,19 +98,19 @@ class Self extends Component {
         console.log("deleted item is", id)
         axios.delete('api/task/' + id)
             .then((res) => {
-                console.log('Student successfully deleted!', res)
+                console.log('Successfully deleted!', res)
                 this.getAll()
             }).catch((error) => {
                 console.log(error)
             })
     }
-    onUpdate = (id, firstName, lastName, aim, body, e) => {
+    onUpdate = (id, name, email, address, role, team, image, e) => {
         e.preventDefault()
-        const updatedValue = { firstName: firstName, lastName: lastName, aim: aim, body: body }
+        const updatedValue = { name: name, email: email, address: address, role: role, team: team, image: image }
         axios.put(`api/task/${id}`, updatedValue)
             .then((res) => {
                 console.log(res.data)
-                console.log('Student successfully updated')
+                console.log('Successfully updated')
                 this.getAll();
                 this.resetUserInputs();
             }).catch((error) => {
@@ -114,14 +119,16 @@ class Self extends Component {
 
     }
 
-    onEdit = (firstName, id, lastName, aim, body, e) => {
+    onEdit = (name, id, email, address, role, team, image, e) => {
         e.preventDefault()
         this.setState({
             id: id,
-            firstName: firstName,
-            lastName: lastName,
-            aim: aim,
-            body: body
+            name: name,
+            email: email,
+            address: address,
+            role: role,
+            team: team,
+            image: image
 
 
         })
@@ -144,17 +151,19 @@ class Self extends Component {
                         size='mini'
                         src={post.productImage}
                     />
-                    <p>{post.firstName}  {post.lastName}</p>
+                    <p>{post.name} </p>
 
-                    <Card.Meta>{post.aim}</Card.Meta>
+                    <Card.Meta>{post.email}</Card.Meta>
+                    <Card.Meta>{post.role}</Card.Meta>
+                    <Card.Meta>{post.team}</Card.Meta>
 
                     <Card.Description>
-                        {post.body}
+                        {post.address}
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
                     <div className='ui two buttons'>
-                        <Button onClick={this.onEdit.bind(this, post.firstName, post._id, post.lastName, post.aim, post.body
+                        <Button onClick={this.onEdit.bind(this, post.name, post._id, post.email, post.address, post.role, post.team, post.image
                         )} basic color='green'>
                             Edit
           </Button>
@@ -168,6 +177,7 @@ class Self extends Component {
     };
     render() {
         console.log('state', this.state)
+        console.log('items', this.state.items)
 
 
 
@@ -177,42 +187,51 @@ class Self extends Component {
             <div className='self'>
                 <form class="ui form app">
                     <div class="field">
-                        <label>First Name</label>
-                        <input type="text" name='firstName'
+                        <label>Name</label>
+                        <input type="text" name='name'
                             placeholder='Enter task name'
-                            value={this.state.firstName}
+                            value={this.state.name}
                             onChange={this.handleChange}
                         />
                     </div>
                     <div class="field">
-                        <label>Last Name</label>
-                        <input type="text" name='lastName'
+                        <label>Email address</label>
+                        <input type="text" name='email'
                             placeholder='Enter last name'
-                            value={this.state.lastName}
+                            value={this.state.email}
                             onChange={this.handleChange}
                         />
                     </div>
                     <div class="field">
-                        <label>Aim</label>
-                        <input type="text" name='aim'
+                        <label>Role</label>
+                        <input type="text" name='role'
                             placeholder='Enter your aim'
-                            value={this.state.aim}
+                            value={this.state.role}
                             onChange={this.handleChange}
 
                         />
                     </div>
                     <div class="field">
-                        <label>Body</label>
-                        <input type="text" name='body'
+                        <label>Team</label>
+                        <input type="text" name='team'
                             placeholder='Enter body details'
-                            value={this.state.body}
+                            value={this.state.team}
+                            onChange={this.handleChange}
+
+                        />
+                    </div>
+                    <div class="field">
+                        <label>Address</label>
+                        <input type="text" name='address'
+                            placeholder='Enter body details'
+                            value={this.state.address}
                             onChange={this.handleChange}
 
                         />
                     </div>
                     { //<div class="field">
                         //    <label>File</label>
-                        //    <input type="file" name='file'
+                      //  <input type="file" name='file'
                         //        onChange={this.handleChange}
 
 
@@ -223,11 +242,12 @@ class Self extends Component {
                     }
                     <div className='subBtn'>
                         <Button className='orange'
-                            onClick={this.onUpdate.bind(this, data.id, data.firstName, data.lastName, data.aim, data.body)}
+                            onClick={this.onUpdate.bind(this, data.id, data.name, data.email, data.role, data.team, data.address)}
                         >
-                            Update
+                            UPDATE EMPLOYEE
                 </Button>
-                        <Button className='green' onClick={this.submit}>Submit</Button>
+                        <Button className='green' onClick={this.submit}>ADD EMPLOYEE</Button>
+                     
                     </div>
                 </form>
 

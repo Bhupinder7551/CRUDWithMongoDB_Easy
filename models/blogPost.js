@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 // Schema
 const Schema = mongoose.Schema;
 const BlogPostSchema = new Schema({
-    lastName: String,
-    aim: String,
-    body: String,
-    firstName: String,
+    name: String,
+    email: String,
+    address: String,
+    role: String,
+    team: String,
     image: String
 
 });
